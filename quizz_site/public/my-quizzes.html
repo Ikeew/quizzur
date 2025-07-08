@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Quizzes - Quizzur</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Cabeçalho Fixo -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Quizzur</h1>
+            </div>
+            
+            <nav class="header-nav">
+                <div class="user-menu" id="userMenu">
+                    <button class="user-btn" onclick="toggleUserDropdown()">
+                        <i class="fas fa-user"></i>
+                        <span id="userName">Entrar</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" id="userDropdown">
+                        <a href="#" onclick="showLoginModal()">
+                            <i class="fas fa-sign-in-alt"></i> Entrar
+                        </a>
+                        <a href="#" onclick="showRegisterModal()">
+                            <i class="fas fa-user-plus"></i> Cadastrar
+                        </a>
+                        <div class="dropdown-divider" id="dropdownDivider" style="display: none;"></div>
+                        <a href="#" onclick="logout()" id="logoutBtn" style="display: none;">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Container Principal -->
+    <div class="main-container">
+        <!-- Menu Lateral -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Início</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="explore.html" class="nav-link">
+                            <i class="fas fa-compass"></i>
+                            <span>Explorar</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="create.html" class="nav-link">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Criar Quiz</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="my-quizzes.html" class="nav-link active">
+                            <i class="fas fa-list"></i>
+                            <span>Meus Quizzes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item admin-only" id="adminNavItem" style="display: none;">
+                        <a href="admin.html" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Admin</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <h2>Meus Quizzes</h2>
+                <p>Gerencie seus quizzes criados</p>
+            </div>
+
+            <!-- Filtros e Busca -->
+            <div class="filters-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar meus quizzes...">
+                </div>
+                <div class="filter-options">
+                    <select id="categoryFilter">
+                        <option value="">Todas as categorias</option>
+                        <option value="geral">Conhecimento Geral</option>
+                        <option value="historia">História</option>
+                        <option value="ciencia">Ciência</option>
+                        <option value="geografia">Geografia</option>
+                    </select>
+                    <select id="statusFilter">
+                        <option value="">Todos os status</option>
+                        <option value="public">Público</option>
+                        <option value="private">Privado</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Lista de Quizzes -->
+            <div class="quizzes-container" id="quizzesContainer">
+                <!-- Loading -->
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Carregando seus quizzes...</p>
+                </div>
+                
+                <!-- Lista de quizzes será carregada aqui -->
+            </div>
+
+            <!-- Mensagem de nenhum quiz -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>Nenhum quiz encontrado</h3>
+                <p>Você ainda não criou nenhum quiz. Comece criando seu primeiro quiz!</p>
+                <a href="create.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Criar Primeiro Quiz
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Login -->
+    <div class="modal" id="loginModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Entrar</h3>
+                <button class="close-btn" onclick="closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+            </form>
+            <p class="auth-link">
+                Não tem conta? <a href="#" onclick="showRegisterModal()">Cadastre-se</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal de Registro -->
+    <div class="modal" id="registerModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Criar Conta</h3>
+                <button class="close-btn" onclick="closeRegisterModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="registerName">Nome Completo</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Senha</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirmar Senha</label>
+                    <input type="password" id="registerConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Criar Conta</button>
+            </form>
+            <p class="auth-link">
+                Já tem conta? <a href="#" onclick="showLoginModal()">Faça login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="modal" id="deleteModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Exclusão</h3>
+                <button class="close-btn" onclick="closeDeleteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir este quiz? Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Jogar Quiz -->
+    <div class="modal" id="playQuizModal" style="display: none;">
+        <div class="modal-content" id="playQuizContent">
+            <!-- Conteúdo dinâmico do quiz será inserido aqui pelo JS -->
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="js/my-quizzes.js"></script>
+</body>
+</html> 

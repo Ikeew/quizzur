@@ -1,0 +1,32 @@
+{
+  "name": "quizzur",
+  "version": "1.0.0",
+  "description": "Plataforma de quiz interativa",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "install-deps": "npm install"
+  },
+  "keywords": [
+    "quiz",
+    "education",
+    "interactive",
+    "learning"
+  ],
+  "author": "Quizzur Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quizzur</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Cabeçalho Fixo -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Quizzur</h1>
+            </div>
+            
+            <nav class="header-nav">
+                <div class="user-menu" id="userMenu">
+                    <button class="user-btn" onclick="toggleUserDropdown()">
+                        <i class="fas fa-user"></i>
+                        <span id="userName">Entrar</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" id="userDropdown">
+                        <a href="#" onclick="showLoginModal()">
+                            <i class="fas fa-sign-in-alt"></i> Entrar
+                        </a>
+                        <a href="#" onclick="showRegisterModal()">
+                            <i class="fas fa-user-plus"></i> Cadastrar
+                        </a>
+                        <div class="dropdown-divider" id="dropdownDivider" style="display: none;"></div>
+                        <a href="#" onclick="logout()" id="logoutBtn" style="display: none;">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Container Principal -->
+    <div class="main-container">
+        <!-- Menu Lateral -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Início</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="explore.html" class="nav-link">
+                            <i class="fas fa-compass"></i>
+                            <span>Explorar</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="create.html" class="nav-link">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Criar Quiz</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="my-quizzes.html" class="nav-link">
+                            <i class="fas fa-list"></i>
+                            <span>Meus Quizzes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item admin-only" id="adminNavItem" style="display: none;">
+                        <a href="admin.html" class="nav-link active">
+                            <i class="fas fa-cog"></i>
+                            <span>Admin</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <h2><i class="fas fa-shield-alt"></i> Painel Administrativo</h2>
+                <p>Gerencie usuários, perguntas e visualize estatísticas do sistema</p>
+            </div>
+
+            <!-- Estatísticas Rápidas -->
+            <div class="admin-stats-overview">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" id="totalUsers">0</span>
+                        <span class="stat-label">Usuários</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-question-circle"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" id="totalQuestions">0</span>
+                        <span class="stat-label">Perguntas</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-bar"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" id="quizzesToday">0</span>
+                        <span class="stat-label">Quizzes Hoje</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-trophy"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" id="avgScore">0%</span>
+                        <span class="stat-label">Média Geral</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Abas de Administração -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showAdminTab('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+                <button class="tab-btn" onclick="showAdminTab('users')">
+                    <i class="fas fa-users"></i> Usuários
+                </button>
+                <button class="tab-btn" onclick="showAdminTab('questions')">
+                    <i class="fas fa-question-circle"></i> Perguntas
+                </button>
+                <button class="tab-btn" onclick="showAdminTab('quizzes')">
+                    <i class="fas fa-clipboard-list"></i> Quizzes
+                </button>
+                <button class="tab-btn" onclick="showAdminTab('reports')">
+                    <i class="fas fa-chart-line"></i> Relatórios
+                </button>
+            </div>
+
+            <!-- Conteúdo das Abas -->
+            <div class="admin-content">
+                <!-- Dashboard -->
+                <div id="dashboardTab" class="tab-content active">
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h3>Atividade Recente</h3>
+                            <div class="activity-list" id="activityList">
+                                <!-- Atividades serão carregadas aqui -->
+                            </div>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Top Usuários</h3>
+                            <div class="top-users" id="topUsers">
+                                <!-- Top usuários serão carregados aqui -->
+                            </div>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Estatísticas por Categoria</h3>
+                            <div class="category-stats" id="categoryStats">
+                                <!-- Estatísticas por categoria serão carregadas aqui -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Usuários -->
+                <div id="usersTab" class="tab-content">
+                    <div class="tab-header">
+                        <h3>Gerenciar Usuários</h3>
+                        <div class="tab-actions">
+                            <input type="text" id="userSearch" placeholder="Buscar usuários..." onkeyup="filterUsers()">
+                            <button class="btn btn-primary" onclick="exportUsers()">
+                                <i class="fas fa-download"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="users-table-container">
+                        <table class="admin-table" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Nível</th>
+                                    <th>Quizzes</th>
+                                    <th>Média</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Usuários serão carregados aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Perguntas -->
+                <div id="questionsTab" class="tab-content">
+                    <div class="tab-header">
+                        <h3>Gerenciar Perguntas</h3>
+                        <div class="tab-actions">
+                            <button class="btn btn-primary" onclick="showAddQuestionModal()">
+                                <i class="fas fa-plus"></i> Nova Pergunta
+                            </button>
+                        </div>
+                    </div>
+                    <div class="questions-list" id="questionsList">
+                        <!-- Perguntas serão carregadas aqui -->
+                    </div>
+                </div>
+
+                <!-- Quizzes -->
+                <div id="quizzesTab" class="tab-content">
+                    <div class="tab-header">
+                        <h3>Gerenciar Quizzes</h3>
+                        <div class="tab-actions">
+                            <select id="quizFilter" onchange="filterQuizzes()">
+                                <option value="">Todos os quizzes</option>
+                                <option value="public">Públicos</option>
+                                <option value="private">Privados</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="quizzes-list" id="quizzesList">
+                        <!-- Quizzes serão carregados aqui -->
+                    </div>
+                </div>
+
+                <!-- Relatórios -->
+                <div id="reportsTab" class="tab-content">
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h3>Relatório de Performance</h3>
+                            <div class="report-content" id="performanceReport">
+                                <!-- Relatório será carregado aqui -->
+                            </div>
+                        </div>
+                        <div class="report-card">
+                            <h3>Relatório de Usuários</h3>
+                            <div class="report-content" id="usersReport">
+                                <!-- Relatório será carregado aqui -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Login -->
+    <div class="modal" id="loginModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Entrar</h3>
+                <button class="close-btn" onclick="closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+            </form>
+            <p class="auth-link">
+                Não tem conta? <a href="#" onclick="showRegisterModal()">Cadastre-se</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal de Registro -->
+    <div class="modal" id="registerModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Criar Conta</h3>
+                <button class="close-btn" onclick="closeRegisterModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="registerName">Nome Completo</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Senha</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirmar Senha</label>
+                    <input type="password" id="registerConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Criar Conta</button>
+            </form>
+            <p class="auth-link">
+                Já tem conta? <a href="#" onclick="showLoginModal()">Faça login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar perguntas -->
+    <div class="modal" id="addQuestionModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Nova Pergunta</h3>
+                <button class="close-btn" onclick="closeAddQuestionModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addQuestionForm" class="add-question-form">
+                <div class="form-group">
+                    <label for="questionCategory">Categoria</label>
+                    <select id="questionCategory" required>
+                        <option value="">Selecione a categoria</option>
+                        <option value="geral">Conhecimento Geral</option>
+                        <option value="historia">História</option>
+                        <option value="ciencia">Ciência</option>
+                        <option value="geografia">Geografia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="questionText">Pergunta</label>
+                    <textarea id="questionText" required placeholder="Digite a pergunta"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="optionA">Opção A</label>
+                        <input type="text" id="optionA" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionB">Opção B</label>
+                        <input type="text" id="optionB" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="optionC">Opção C</label>
+                        <input type="text" id="optionC" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="optionD">Opção D</label>
+                        <input type="text" id="optionD" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="correctAnswer">Resposta Correta</label>
+                    <select id="correctAnswer" required>
+                        <option value="">Selecione a resposta correta</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddQuestionModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Pergunta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html> 
